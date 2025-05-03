@@ -5,7 +5,7 @@
     <style>
         /* aqui van los estilos de la página */
         h1 {
-            color: green;
+            color: rgb(219, 16, 219);
             font-family: Arial, sans-serif;
             text-align: center;
         }
@@ -34,7 +34,7 @@
         .water {
             background-color: lightblue;
             border: 3px solid blue;
-            font-size: 20px;
+            font-size: 25px;
             border-radius: 10px;
             cursor: pointer;
         }
@@ -50,6 +50,7 @@
     <h1>Buscaminas</h1>
     <p>Gess mine: shift + click / Gess water: click</p>
     <p>Good luck</p>
+    <p id="contador"></p>
     <div id="tablero">
         <!-- aquí se generará el tablero con JavaScript -->
     </div>
@@ -64,6 +65,24 @@
             "041340",
             "000410"
         ];
+        // inicializamos el total de minas a 10
+        var totalMinas = 10; // Agregamos la variable para contar las minas
+        // inicializamos el contador de casillas descubiertas a 0
+        var contadorCasillasDescubiertas = 0; // Agregamos la variable para contar las casillas descubiertas
+        // inicializamos el contador de casillas marcadas a 0
+        var contadorCasillasMarcadas = 0; // Agregamos la variable para contar las casillas marcadas
+
+
+        actualizarContador();
+
+        function actualizarContador(){
+            // actualizamos el contador de casillas descubiertas
+            document.getElementById("contador").innerHTML = "Toal de minas: " + totalMinas + "<br>" +
+            "Casillas descubiertas: " + contadorCasillasDescubiertas + "<br>" +
+                "Casillas marcadas: " + contadorCasillasMarcadas;
+        }
+
+
         // aquí va el código de JavaScript
         // generar el tablero con JavaScript
         // crear una matriz de 10x10 con ceros
@@ -76,7 +95,7 @@
         }
         // colocar 10 minas en posiciones aleatorias
         var i = 0;
-        while (i < 10) {
+        while (i < totalMinas) {
             var fila = Math.floor(Math.random() * 10);
             var columna = Math.floor(Math.random() * 10);
             // si ya hay una mina en esa posición, restar 1 a i para intentar de nuevo
@@ -116,12 +135,16 @@
         function descubrir(fila, columna) {
             // si el usuario está pulsando shift, marcar la casilla con un @
             if (event.shiftKey) {
-                // si la casilla ya está marcada con @, quitar la marca
+                // si la casilla ya está marcada con @, quitar la marca                
                 if (document.getElementsByTagName("button")[fila * 10 + columna].innerText === "@") {
                     document.getElementsByTagName("button")[fila * 10 + columna].innerText = "?";
                     // sacar al boton de la clase "marcada"
                     document.getElementsByTagName("button")[fila * 10 + columna].classList.remove("marcada");
+                    contadorCasillasMarcadas--;
+                    actualizarContador();
                 } else {
+                    contadorCasillasMarcadas++;                    
+                    actualizarContador();
                     document.getElementsByTagName("button")[fila * 10 + columna].innerText = "@";
                     // meter al boton en la clase "marcada"
                     document.getElementsByTagName("button")[fila * 10 + columna].classList.add("marcada");
@@ -138,6 +161,7 @@
                         alert("¡Ganaste!");
                     }
                 }
+                
             } else {
                 // si la casilla es una mina, mostrar todas las minas y mostrar un mensaje de derrota
                 if (tablero[fila][columna] === 9) {
@@ -213,9 +237,11 @@
                                 }
                             }
                         }
+                        contadorCasillasDescubiertas++;
                     }
                 }
             }
+            actualizarContador();
         }
     </script>
 
